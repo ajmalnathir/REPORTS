@@ -20,6 +20,7 @@ const pool = mysql.createPool(dbConfig);
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Test database connection
 app.get('/test-db', async (req, res) => {
@@ -212,6 +213,18 @@ app.get('/api/daily_summary2/:period', async (req, res) => {
 });
 
 
+app.post ('/login', (req, res) => {
+    const mysql = "INSERT INTO User (username, password) VALUES (?, ?)";
+    const values = [req.body.username, req.body.password];
+    db.query(mysql, values, (err, result) => {
+        if (err) {
+            console.error('Error during login:', err);
+            return res.status(500).json({ success: false, message: 'Login failed', error: err });
+        }
+        res.json({ success: true, message: "Login Successful" });
+    }
+);
+});
 
 // Start server
 app.listen(PORT, () => {
